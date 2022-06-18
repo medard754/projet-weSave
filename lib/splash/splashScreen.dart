@@ -25,6 +25,7 @@ class _StartState extends State<Start> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Container(

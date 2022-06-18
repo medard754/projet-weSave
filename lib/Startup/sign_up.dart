@@ -12,10 +12,6 @@ class _SignUpState extends State<SignUp> {
   final AuthService _authService = AuthService();
 
   bool loading = false;
-  CustomTextfield email = CustomTextfield();
-  CustomTextfield password = CustomTextfield();
-  CustomTextfield password_confirm = CustomTextfield();
-  CustomTextfield username = CustomTextfield();
   String error = '';
   String errorpwd = '';
   final _formKey = GlobalKey<FormState>();
@@ -23,10 +19,11 @@ class _SignUpState extends State<SignUp> {
   late String onBoardingLevel;
   bool isLoading = false;
   bool isValue = false;
-  String mail = '';
-  String pwd = '';
-  String c_pwd = "";
+  String mail = "";
+  String password = "";
+  String confirmpwd = "";
   String nom = "";
+  String prenoms = "";
   @override
   Widget build(BuildContext context) {
     return loading
@@ -70,75 +67,71 @@ class _SignUpState extends State<SignUp> {
                         fit: BoxFit.contain)),
               ),*/
               SizedBox(height: 25),
-              username.textFormField("Entrer votre nom", "entrer un nom valid",
-                  2, 1, false, Icons.person, (e) {
-                setState(() {
+              CustomInput(
+                title: "Username", 
+                placeholder: "Entrer votre nom", 
+                obscure: false, 
+                err: "entrer un nom valid", 
+                validator: (e){}, 
+                onSaved: (e){
+                  setState(() {
                   nom = e;
                 });
-              }),
-              SizedBox(height: 12),
-              email.textFormField(
-                "Entrer votre mail",
-                "entrer un email valid",
-                2,
-                1,
-                false,
-                Icons.mail,
-                (e) {
+                }, 
+                icon: Icons.person, max: 2, min: 1),
+              SizedBox(height: 25),
+              CustomInput(
+                title: "Prénom", 
+                placeholder: "Entrer votre prénom", 
+                obscure: false, 
+                err: "entrer un nom valid", 
+                validator: (e){}, 
+                onSaved: (e){
                   setState(() {
-                    email = e;
-                  });
-                },
-              ),
-              SizedBox(height: 12),
-              password.textFormField(
-                "Entrer votre password",
-                "mot de passe invalid",
-                2,
-                1,
-                false,
-                Icons.vpn_key_rounded,
-                (e) {
+                  prenoms = e;
+                });
+                }, 
+                icon: Icons.person, max: 2, min: 1),
+              SizedBox(height: 25),
+              CustomInput(
+                title: "Email", 
+                placeholder: "Entrer votre email", 
+                obscure: false, 
+                err: "entrer un email valid", 
+                validator: (e){}, 
+                onSaved: (e){
                   setState(() {
-                    password = e;
-                  });
-                },
-              ),
-              SizedBox(height: 10),
-              password_confirm.textFormField(
-                "Confirmer votre password",
-                "mot de passe invalid",
-                2,
-                1,
-                false,
-                Icons.vpn_key_rounded,
-                (e) {
+                  mail = e;
+                });
+                }, 
+                icon: Icons.mail , max: 2, min: 1),
+              const SizedBox(height: 12),
+              CustomInput(
+                title: "Mot de passe", 
+                placeholder: "Entrer un mot de passe", 
+                obscure: false, 
+                err: "entrer un mot de passe valid", 
+                validator: (e){}, 
+                onSaved: (e){
                   setState(() {
-                    c_pwd = e;
-                  });
-                },
-              ),
-              /*Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Checkbox(
-                      checkColor: color,
-                      value: isValue,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isValue = value!;
-                        });
-                      }),
-                  Text("Remember me"),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    "Mot de passe oublié",
-                    style: TextStyle(color: color, fontSize: 15),
-                  )
-                ],
-              ),*/
+                  password = e;
+                });
+                }, 
+                icon: Icons.vpn_key_rounded , max: 2, min: 1),
+              const SizedBox(height: 12),
+              CustomInput(
+                title: "Confirmer votre mot de passe", 
+                placeholder: "Confirmer votre mot de passe", 
+                obscure: false, 
+                err: "entrer un mot de passe valid", 
+                validator: (e){}, 
+                onSaved: (e){
+                  setState(() {
+                  confirmpwd = e;
+                });
+                }, 
+                icon: Icons.vpn_key_rounded , max: 2, min: 1),
+             
               SizedBox(height: 20),
               FlatButton(
                   minWidth: double.infinity,
@@ -147,18 +140,17 @@ class _SignUpState extends State<SignUp> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       setState(() {
-                        loading = true;
+                        //loading = true;
                       });
-
+                      
                       dynamic result = await _authService
-                          .signUpWitchEmailAndPassword(mail, pwd);
-
-                     /* if (pwd.length < 8 ) {
-                        error = "Entrer un mot de passe au moins 8 caractère";
-                      } else {
-                        
-                      }*/
-                      if (result == null) {
+                          .signUpWitchEmailAndPassword(mail, password);
+                    print(nom);
+                    print(prenoms);
+                    print(mail);
+                    print(password);
+                    print(confirmpwd);
+                      /*  if (result == null) {
                           setState(() {
                             error = "Please supply a valid email";
                             loading = false;
@@ -168,6 +160,8 @@ class _SignUpState extends State<SignUp> {
                           print(result);
                           print("connexion valid");
                         }
+                      */
+                      
                     }
                   },
                   child: Text("s'inscrire",
@@ -183,6 +177,7 @@ class _SignUpState extends State<SignUp> {
                 error,
                 style: TextStyle(color: Colors.red),
               ),
+             
               SizedBox(
                 height: 25,
               ),

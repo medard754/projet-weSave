@@ -17,8 +17,6 @@ class _SignInState extends State<SignIn> {
   String error = '';
   bool loading = false;
 
-  CustomTextfield mail = CustomTextfield();
-  CustomTextfield pwd = CustomTextfield();
 
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
@@ -71,33 +69,31 @@ class _SignInState extends State<SignIn> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 25),
-              mail.textFormField(
-                "Entrer votre mail",
-                "entrer un mail valid",
-                2,
-                1,
-                false,
-                Icons.mail,
-                (e) {
+              CustomInput(
+                title: "Email", 
+                placeholder: "Entrer votre email", 
+                obscure: false, 
+                err: "entrer un email valid", 
+                validator: (e){}, 
+                onSaved: (e){
                   setState(() {
-                    email = e;
-                  });
-                },
-              ),
-              SizedBox(height: 12),
-              pwd.textFormField(
-                "Entrer votre password",
-                "mot de passe invalid",
-                2,
-                1,
-                false,
-                Icons.vpn_key_rounded,
-                (e) {
+                  email = e;
+                });
+                }, 
+                icon: Icons.mail , max: 2, min: 1),
+              const SizedBox(height: 12),
+              CustomInput(
+                title: "Mot de passe", 
+                placeholder: "Entrer votre mot de passe", 
+                obscure: false, 
+                err: "entrer un mot de passe valid", 
+                validator: (e){}, 
+                onSaved: (e){
                   setState(() {
-                    password = e;
-                  });
-                },
-              ),
+                  password = e;
+                });
+                }, 
+                icon: Icons.vpn_key_rounded , max: 2, min: 1),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -133,14 +129,15 @@ class _SignInState extends State<SignIn> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       setState(() {
-                                  loading = true;
+                                  //loading = true;
                                 });
                       dynamic result = await _authService.signInAnon();
                           
                       print("connexion etablie");
                       print(result);
-
-                      if (result == null) {
+                      print(email);
+                      print(password);
+                      /*if (result == null) {
                         setState(() {
                               error = "Please supply a valid email";
                             loading = false;
@@ -149,7 +146,7 @@ class _SignInState extends State<SignIn> {
                         print("Register");
                         print(result);
                         print("connexion valid");
-                      }
+                      }*/
                     }
                   },
                   child: Text("Se connecter",
