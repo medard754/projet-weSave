@@ -1,3 +1,4 @@
+import 'package:wesave/Home/dashboard/dashboard.dart';
 import 'package:wesave/ressource/export.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -62,7 +63,7 @@ class CustomDrawer extends StatelessWidget {
                                 selectedColor: Couleur.color,
                                 selectedTileColor: Couleur.color,
                                 onTap: () {
-                                  //Get.to(Categorie());
+                                  Get.to(Dashboard(adminID: '',));
                                 }),
                             const SizedBox(height: defaultPadding-5),
                             ListTile(

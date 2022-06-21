@@ -226,4 +226,83 @@ class _HomePageState extends State<HomePage> {
           }),
     );
   }
+
+  /*showDialogFunc(
+    context, var img, var nom, var poids, var categorie, var prix) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: Material(
+              type: MaterialType.transparency,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                padding: const EdgeInsets.all(15),
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(Icons.close_outlined, color: color),
+                          iconSize: 20,
+                        )
+                      ],
+                    ),
+                    Text(
+                      nom,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                        height: 220,
+                        width: double.infinity,
+                        child: Image.network(
+                          img,
+                          fit: BoxFit.contain,
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                         Get.to(ControlUser());
+                        },
+                        icon: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                          size: 15,
+                        ),
+                        label: Text(
+                          "Continuer pour validé l'achat",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }*/
 }

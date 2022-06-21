@@ -6,10 +6,10 @@ class DatabaseService {
   DatabaseService({
       this.uid=''
   }); 
-  final CollectionReference brewCollection = FirebaseFirestore.instance.collection("brew");
-  final CollectionReference contactCollection = FirebaseFirestore.instance.collection("contact");
-  CollectionReference _collectionReferenceUser =
-      FirebaseFirestore.instance.collection('client');
+  
+  final CollectionReference _collectionReferenceUser = FirebaseFirestore.instance.collection('client');
+  final CollectionReference _collectionReferenceAdmin = FirebaseFirestore.instance.collection('admin');
+  final CollectionReference _collectionReferenceProduit = FirebaseFirestore.instance.collection('produit');
 
   // Créer un client
   Future createUser({required AppUser user}) async {
@@ -26,19 +26,56 @@ class DatabaseService {
       telephone: json['telephone'],
       email: json['email'],
       password: json['password']);
+//Lire les utilisateurs
+  Stream<List<AppUser>> getUsertList() {
+    return _collectionReferenceProduit.snapshots().map((snapShot) => snapShot.docs
+        .map((document) =>
+            AppUser.fromJson(document.data as Map<String, dynamic>))
+        .toList());
+  }
+  /*Modifier un client*/
+    //à completer
+  /*Supprimer un client*/
 
 
-  Future UpdateUserData(
+  
+  //Lire les entreprises ou supermarché
+  Stream<List<Entreprise>> getEntrepriseList() {
+    return _collectionReferenceProduit.snapshots().map((snapShot) => snapShot.docs
+        .map((document) =>
+            Entreprise.fromJson(document.data as Map<String, dynamic>))
+        .toList());
+  }
+  //Lire les catégories de la bdd
+  Stream<List<Categorie>> getCategoriestList() {
+    return _collectionReferenceProduit.snapshots().map((snapShot) => snapShot.docs
+        .map((document) =>
+            Categorie.fromJson(document.data as Map<String, dynamic>))
+        .toList());
+  }
+  //Lire les produits de la bdd
+  Stream<List<Produit>> getProduitList() {
+    return _collectionReferenceProduit.snapshots().map((snapShot) => snapShot.docs
+        .map((document) =>
+            Produit.fromJson(document.data as Map<String, dynamic>))
+        .toList());
+  }
+  //Lire les livreurs
+  Stream<List<Livreur>> getLivreurList() {
+    return _collectionReferenceProduit.snapshots().map((snapShot) => snapShot.docs
+        .map((document) =>
+            Livreur.fromJson(document.data as Map<String, dynamic>))
+        .toList());
+  }
+}
+
+ 
+ /*Future UpdateUserData(
       String nom, String email, String subject, String message) async {
     return await brewCollection
         .doc(uid)
         .set({"nom": nom, "email": email, "subject": subject, "message": message});
-  }
-
-  // ignore: non_constant_identifier_names
-
-
-  Future UserDetails({
+    Future UserDetails({
     required String nom,
     required String prenoms,
     required int telephone,
@@ -55,23 +92,4 @@ class DatabaseService {
         'password': password
       }
     );
-  }
-
-
-
-
-  Future ContactForm(String nom, String email, String subject, String message) async {
-    return await contactCollection.add({
-      "nom": nom, 
-      "email": email, 
-      "subject": subject, 
-      "message": message
-    });
-        
-  }
-  //recupere les données
-  Stream<QuerySnapshot> get brews{
-    return brewCollection.snapshots();
-  }
-  
-}
+  }*/

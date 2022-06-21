@@ -1,3 +1,4 @@
+import 'package:wesave/ressource/export.dart';
 class Produit {
   final String nom;
   final int qte;
@@ -15,15 +16,29 @@ class Produit {
     // required this.date,
   });
 
-  
-  factory Produit.fromJson(Map<String, dynamic> json) {
-    return Produit(
+   Map<String, dynamic> toJson() => {
+       // 'uid': uid,
+        'nom': nom,
+        'qte': qte,
+        'pu': pu,
+        'codeCat': codeCat,
+        'url_img': url_img
+      };
+
+  Future createProduit({required Produit produit}) async {
+    final docProduit = FirebaseFirestore.instance.collection('produit').doc();
+    // user.uid = docUser.id;
+    final json = produit.toJson();
+    await docProduit.set(json);
+  }
+
+  static Produit fromJson(Map<String, dynamic> json) => Produit(
+        // uid: json['uid'],
       nom: json['nom'],
       qte: json['qte'],
       pu: json['pu'],
-      codeCat: json['codeCat'],
-      url_img: json['url_img'],
-      // date: json['date']
+      codeCat:json['codeCat'],
+      url_img: json['url_img']
     );
-  }
+  
 }
