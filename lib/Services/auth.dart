@@ -45,9 +45,9 @@ class AuthService {
           email: email, password: password);
       final User? user = result.user;
 
-      // await DatabaseService(uid: user!.uid).UpdateUserData(
-      //   "boton","medard","masculin","age"
-      // );
+      /* await DatabaseService(uid: user!.uid).UpdateUserData(
+         "boton","medard","masculin","age"
+      );*/
       return _userfromfirebase(user);
     } catch (e) {
       print(e.toString());

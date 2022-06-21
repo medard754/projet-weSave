@@ -17,7 +17,7 @@ class _FlatbottonState extends State<Flatbotton> {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-        minWidth: double.infinity,
+       minWidth: double.infinity,
         padding: const EdgeInsets.only(top: 12, bottom: 12),
         color: color,
         onPressed: () async {
@@ -27,16 +27,17 @@ class _FlatbottonState extends State<Flatbotton> {
           Get.offAll(HomePage());
         },
         child: Container(
+          width:MediaQuery.of(context).size.width,
           height:25,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               IconButton(onPressed: (){}, icon: Icon(widget.icon,size:20,),color:Colors.white,),
-              const SizedBox(width:8),
+              
               Text(widget.text,
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       fontFamily: "Montserrat")),
                           IconButton(onPressed: (){}, icon: Icon(Icons.arrow_forward_ios,size:20,),color:Colors.white,),

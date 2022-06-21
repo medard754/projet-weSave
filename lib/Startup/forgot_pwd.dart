@@ -8,16 +8,15 @@ class ForgotPwd extends StatefulWidget {
 }
 
 class _ForgotPwdState extends State<ForgotPwd> {
- 
   bool loading = false;
-  CustomTextfield email = CustomTextfield();
-  CustomTextfield password = CustomTextfield();
+
   String error = '';
   final _formKey = GlobalKey<FormState>();
   //User model = User();
   late String onBoardingLevel;
   bool isLoading = false;
   bool isValue = false;
+  String email="";
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white, body: _formbody());
@@ -31,9 +30,7 @@ class _ForgotPwdState extends State<ForgotPwd> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              
               SizedBox(height: 8),
-              
               Text(
                 "Entrer le mail de récupération",
                 style: TextStyle(
@@ -43,21 +40,34 @@ class _ForgotPwdState extends State<ForgotPwd> {
                     fontFamily: "Montserrat"),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height:10),
+              const SizedBox(height: 10),
               Container(
-                height:150,
-                width:double.infinity,
-                decoration:BoxDecoration(
-                  image: DecorationImage(
-                    image:AssetImage("assets/img/pwd.png"),
-                    fit:BoxFit.contain
-                  )
-                ),
+                height: 150,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/img/pwd.png"),
+                        fit: BoxFit.contain)),
               ),
               SizedBox(height: 25),
-              email.textFormField("Entrer votre mail", "entrer un mail valid",
-                  2, 1, false, Icons.mail,(){}),
-              
+              CustomInput(
+                  title: "Email",
+                  placeholder: "Entrer votre email",
+                  obscure: false,
+                  err: "entrer un email valid",
+                  validator: (e) {
+                    if (e == null || e.isEmpty) {
+                      return "entrer un email valid";
+                    }
+                  },
+                  onSaved: (e) {
+                    setState(() {
+                      email = e;
+                    });
+                  },
+                  icon: Icons.mail,
+                  max: 2,
+                  min: 1),
               SizedBox(height: 20),
               FlatButton(
                   minWidth: double.infinity,
@@ -77,7 +87,6 @@ class _ForgotPwdState extends State<ForgotPwd> {
               SizedBox(
                 height: 25,
               ),
-              
             ],
           ),
         ));

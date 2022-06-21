@@ -15,7 +15,15 @@ class _welcomePageState extends State<welcomePage> {
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: _onepage()
+            child: ListView(
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.fromLTRB(
+                  defaultPadding,
+                  defaultPadding,
+                  defaultPadding,
+                  MediaQuery.of(context).padding.bottom + defaultPadding),
+              children: [_onepage()],
+            ),
           ),
         )
       )
@@ -23,6 +31,8 @@ class _welcomePageState extends State<welcomePage> {
   }
   Widget _onepage(){
     return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
                   height:MediaQuery.of(context).size.height/2,
@@ -34,7 +44,7 @@ class _welcomePageState extends State<welcomePage> {
                     )
                   ),
         ),
-        const SizedBox(height:15),
+        
         Text(
           "Bienvenue sur WeSave",
           style:TextStyle(

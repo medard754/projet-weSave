@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 const defaultRadius = 12.0;
-const defaultPadding = 15.0;
+const defaultPadding = 10.0;
 const blueColor = Color(0xff1ab1dc);
 const redColor = Color(0xfff1323a);
 const greenColor = Color(0xff3ad5b6);
