@@ -1,4 +1,3 @@
-
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:wesave/ressource/export.dart';
 import 'package:wesave/Models/User.dart';
@@ -12,6 +11,7 @@ class CreateClient extends StatefulWidget {
 
 class _CreateClientState extends State<CreateClient> {
   final user = FirebaseAuth.instance.currentUser;
+
   List<String> docIDs = [];
   Future getDocId() async {
     await FirebaseFirestore.instance
@@ -23,7 +23,7 @@ class _CreateClientState extends State<CreateClient> {
             }));
   }
 
- @override
+  @override
   void initState() {
     getDocId();
     super.initState();
@@ -45,8 +45,8 @@ class _CreateClientState extends State<CreateClient> {
   String confirmpwd = "";
   String nom = "";
   String prenoms = "";
-  String adresse="";
-  
+  String adresse = "";
+
   var telephone;
   var Codetelephone;
   var Nompays;
@@ -84,7 +84,7 @@ class _CreateClientState extends State<CreateClient> {
             children: [
               SizedBox(height: MediaQuery.of(context).size.height / 8),
               Text(
-                "Inscrivez-vous",
+                "Enrégistré un client",
                 style: TextStyle(
                     color: Couleur.color,
                     fontWeight: FontWeight.bold,
@@ -141,7 +141,7 @@ class _CreateClientState extends State<CreateClient> {
                   icon: Icons.person,
                   max: 2,
                   min: 1),
-                  const SizedBox(height: defaultPadding),
+              const SizedBox(height: defaultPadding),
               CustomInput(
                   title: "Adresse",
                   placeholder: "Entrer l'adresse",
@@ -154,7 +154,7 @@ class _CreateClientState extends State<CreateClient> {
                   },
                   onSaved: (e) {
                     setState(() {
-                     adresse= e;
+                      adresse = e;
                     });
                   },
                   icon: Icons.person,
@@ -277,16 +277,19 @@ class _CreateClientState extends State<CreateClient> {
                       setState(() {
                         //loading = true;
                       });
+                      var value = 2;
                       final user = AppUser(
                           nom: nom,
                           prenoms: prenoms,
                           adresse: adresse,
                           telephone: "90201107",
                           email: mail,
-                          password: password);
+                          password: password,
+                          value: value);
                       dynamic result = await _authService
                           .signUpWitchEmailAndPassword(mail, password);
                       _databaseService.createUser(user: user);
+                      _databaseService.getUserDoc();
                       // print(nom);
                       // print(prenoms);
                       // print(mail);
@@ -312,7 +315,6 @@ class _CreateClientState extends State<CreateClient> {
                           fontWeight: FontWeight.w700,
                           fontFamily: "Montserrat"))),
               const SizedBox(height: 10),
-              
             ],
           ),
         ));

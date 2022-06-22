@@ -16,6 +16,7 @@ class Categorie {
 
   Future createCategorie({required Categorie categorie}) async {
     final docCategorie = FirebaseFirestore.instance.collection('categorie').doc();
+    
     // user.uid = docUser.id;
     final json = categorie.toJson();
     await docCategorie.set(json);

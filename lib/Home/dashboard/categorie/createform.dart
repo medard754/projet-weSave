@@ -8,10 +8,10 @@ class CreateCategorie extends StatefulWidget {
 }
 
 class _CreateCategorieState extends State<CreateCategorie> {
-  
   final AuthService _authService = AuthService();
   final FirebaseServices _firebaseServices = FirebaseServices();
   final DatabaseService _databaseService = DatabaseService();
+  final Categorie _categorie = Categorie();
   bool loading = false;
 
   final _formKey = GlobalKey<FormState>();
@@ -85,7 +85,7 @@ class _CreateCategorieState extends State<CreateCategorie> {
                   icon: Icons.person,
                   max: 2,
                   min: 1),
-                  const SizedBox(height: defaultPadding + 5),
+              const SizedBox(height: defaultPadding + 5),
               CustomInput(
                   title: "Description",
                   placeholder: "Entrer la description",
@@ -117,7 +117,9 @@ class _CreateCategorieState extends State<CreateCategorie> {
                       });
                       print(libelle);
                       print(description);
-
+                      final categorie =
+                          Categorie(libelle: libelle, description: description);
+                      _categorie.createCategorie(categorie: categorie);
                       // final user = AppUser(
                       //     nom: nom,
                       //     prenoms: prenoms,

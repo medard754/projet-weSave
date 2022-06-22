@@ -1,5 +1,8 @@
+import 'package:wesave/Home/dashboard/categorie/createform.dart';
 import 'package:wesave/Home/dashboard/client/allform.dart';
 import 'package:wesave/Home/dashboard/client/createform.dart';
+import 'package:wesave/Home/dashboard/entreprise/createform.dart';
+import 'package:wesave/Home/dashboard/produit.dart/createform.dart';
 import 'package:wesave/ressource/export.dart';
 import 'package:wesave/widgets/loader/PourHourGring.dart';
 
@@ -21,9 +24,120 @@ class _DashboardState extends State<Dashboard> {
   final CollectionReference _collectionReferenceProduit =
       FirebaseFirestore.instance.collection('produit');
   final CollectionReference _collectionReferenceLivreur =
-      FirebaseFirestore.instance.collection('livreur');
+      FirebaseFirestore.instance.collection('commerce');
   final CollectionReference _collectionReferenceCommande =
       FirebaseFirestore.instance.collection('commander');
+  final user = FirebaseAuth.instance.currentUser;
+  var a, b, c, d, e, f;
+  List<String> docIDsCommerce = [];
+  List<String> docIDsCategorie = [];
+  List<String> docIDsProduit = [];
+  List<String> docIDsLivreur = [];
+  List<String> docIDsCompte = [];
+  List<String> docIDsCommande = [];
+  List<String> docIDs = [];
+  List taille = [];
+  Future getDocId() async {
+    await FirebaseFirestore.instance
+        .collection('client')
+        .get()
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference.id);
+              docIDs.add(document.reference.id);
+            }));
+    a = docIDs;
+  }
+
+  Future getDocIdCommerce() async {
+    await FirebaseFirestore.instance
+        .collection('commerce')
+        .get()
+        // ignore: avoid_function_literals_in_foreach_calls
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference.id);
+              docIDsCommerce.add(document.reference.id);
+            }));
+    b = docIDsCommerce.length;
+  }
+
+  Future getDocIdCategorie() async {
+    await FirebaseFirestore.instance
+        .collection('categorie')
+        .get()
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference.id);
+              docIDsCategorie.add(document.reference.id);
+            }));
+  }
+
+  Future getDocIdProduit() async {
+    await FirebaseFirestore.instance
+        .collection('produit')
+        .get()
+        // ignore: avoid_function_literals_in_foreach_calls
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference.id);
+              docIDsProduit.add(document.reference.id);
+            }));
+  }
+
+  Future getDocIdLivreur() async {
+    await FirebaseFirestore.instance
+        .collection('livreur')
+        .get()
+        // ignore: avoid_function_literals_in_foreach_calls
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference.id);
+              docIDsLivreur.add(document.reference.id);
+            }));
+  }
+
+  Future getDocIdCompte() async {
+    await FirebaseFirestore.instance
+        .collection('compte')
+        .get()
+        // ignore: avoid_function_literals_in_foreach_calls
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference.id);
+              docIDsCompte.add(document.reference.id);
+            }));
+  }
+
+  Future getDocIdCommande() async {
+    await FirebaseFirestore.instance
+        .collection('commander')
+        .get()
+        // ignore: avoid_function_literals_in_foreach_calls
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference.id);
+              docIDsCompte.add(document.reference.id);
+            }));
+  }
+
+  var to;
+  @override
+  void initState() {
+    getDocId();
+    getDocIdCategorie();
+    getDocIdCommerce();
+    getDocIdCompte();
+    getDocIdLivreur();
+    getDocIdProduit();
+    getDocIdCommande();
+    taille = [
+      docIDs.length,
+      docIDsCommerce.length,
+      docIDsCategorie.length,
+      docIDsProduit.length,
+      docIDsLivreur.length,
+      docIDsCommande.length,
+      docIDsCompte.length,
+    ];
+    super.initState();
+    to = docIDs.length;
+    // startAutoReload();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -44,11 +158,12 @@ class _DashboardState extends State<Dashboard> {
 
   List data = [
     "client",
-    "Entreprise",
+    "Commerce",
     "Catégories",
     "Produit",
     "Livreur",
-    "Commandes"
+    "Commandes",
+    "Compte"
   ];
   Widget _contentPage() {
     return Padding(
@@ -91,7 +206,17 @@ class _DashboardState extends State<Dashboard> {
                     padding: const EdgeInsets.all(10),
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(CreateClient());
+                        if (index == 0) {
+                          Get.to(CreateClient());
+                        } else if (index == 1) {
+                          Get.to(CreateEntreprise());
+                        } else if (index == 2) {
+                          Get.to(CreateCategorie());
+                        } else if (index == 3) {
+                          Get.to(CreateProduit());
+                        } else if (index == 1) {
+                          Get.to(CreateEntreprise());
+                        }
                       },
                       child: Container(
                           alignment: Alignment.center,
@@ -108,7 +233,7 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               ),
                               const SizedBox(height: defaultPadding),
-                              Text("12")
+                              Text(docIDsCategorie.length.toString()),
                             ],
                           ),
                           decoration: BoxDecoration(

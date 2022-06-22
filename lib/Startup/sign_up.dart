@@ -27,6 +27,7 @@ class _SignUpState extends State<SignUp> {
   String confirmpwd = "";
   String nom = "";
   String prenoms = "";
+  String adresse = "";
   var telephone;
   var Codetelephone;
   var Nompays;
@@ -116,6 +117,25 @@ class _SignUpState extends State<SignUp> {
                   onSaved: (e) {
                     setState(() {
                       prenoms = e;
+                    });
+                  },
+                  icon: Icons.person,
+                  max: 2,
+                  min: 1),
+              const SizedBox(height: defaultPadding),
+              CustomInput(
+                  title: "Adresse",
+                  placeholder: "Entrer votre adresse",
+                  obscure: false,
+                  err: "entrer un adresse valid",
+                  validator: (e) {
+                    if (e == null || e.isEmpty) {
+                      return "entrer un adresse valid";
+                    }
+                  },
+                  onSaved: (e) {
+                    setState(() {
+                      adresse = e;
                     });
                   },
                   icon: Icons.person,
@@ -238,14 +258,20 @@ class _SignUpState extends State<SignUp> {
                       setState(() {
                         //loading = true;
                       });
+                      var value = 2;
                       final user = AppUser(
                           nom: nom,
                           prenoms: prenoms,
+                          adresse: adresse,
                           telephone: "90201107",
                           email: mail,
-                          password: password);
+                          password: password,
+                          value: value
+                      );
+                      
                       dynamic result = await _authService
                           .signUpWitchEmailAndPassword(mail, password);
+                      //fonction crear user
                       _databaseService.createUser(user: user);
                       // print(nom);
                       // print(prenoms);

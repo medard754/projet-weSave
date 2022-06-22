@@ -15,6 +15,7 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
   final AuthService _authService = AuthService();
   final FirebaseServices _firebaseServices = FirebaseServices();
   final DatabaseService _databaseService = DatabaseService();
+  final Entreprise _entreprise = Entreprise();
   bool loading = false;
   String error = '';
   String errorpwd = '';
@@ -28,8 +29,10 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
   String siege = "";
   String adresse = "";
   String telephone = "";
+  String password = "";
+  String confirmpwd = "";
   int ifu = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     return loading
@@ -180,6 +183,7 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
                   icon: Icons.mail,
                   max: 2,
                   min: 1),
+              const SizedBox(height: defaultPadding),
               CustomInput(
                   title: "Ifu",
                   placeholder: "Entrer votre ifu",
@@ -192,10 +196,58 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
                   },
                   onSaved: (e) {
                     setState(() {
-                      //ifu = e;
+                      ifu = int.parse(e);
                     });
                   },
                   icon: Icons.mail,
+                  max: 2,
+                  min: 1),
+              const SizedBox(height: defaultPadding),
+              CustomInput(
+                  title: "Mot de passe",
+                  placeholder: "Entrer un mot de passe",
+                  obscure: false,
+                  err: "entrer un mot de passe valid",
+                  validator: (e) {
+                    if (e == null || e.isEmpty) {
+                      return "entrer un mot de passe valid";
+                    } else {
+                      if (e.length < 8) {
+                        password = e;
+                        return "Entrer un mot de passe au moins 8 caractère";
+                      }
+                      return null;
+                    }
+                  },
+                  onSaved: (e) {
+                    setState(() {
+                      password = e;
+                    });
+                  },
+                  icon: Icons.vpn_key_rounded,
+                  max: 2,
+                  min: 1),
+              const SizedBox(height: defaultPadding),
+              CustomInput(
+                  title: "Confirmer le mot de passe",
+                  placeholder: "Confirmer le mot de passe",
+                  obscure: false,
+                  err: "entrer un mot de passe valid",
+                  validator: (e) {
+                    if (e == null || e.isEmpty) {
+                      return "entrer un nom valid";
+                    } else {
+                      if (e != password) {
+                        return "entrer le password entrer en haut";
+                      }
+                    }
+                  },
+                  onSaved: (e) {
+                    setState(() {
+                      confirmpwd = e;
+                    });
+                  },
+                  icon: Icons.vpn_key_rounded,
                   max: 2,
                   min: 1),
               const SizedBox(height: defaultPadding),
@@ -215,11 +267,24 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
                       setState(() {
                         //loading = true;
                       });
+                      var value = 1;
                       print(nom);
                       print(siege);
                       print(adresse);
                       print(mail);
                       print(telephone);
+                      print(ifu);
+                      final entreprise = Entreprise(
+                          nom: nom,
+                          adresse: adresse,
+                          telephone: "+2359874562",
+                          email: mail,
+                          siege: siege,
+                          ifu: ifu,
+                          value: value);
+                      dynamic result = await _authService
+                          .signUpWitchEmailAndPassword(mail, password);
+                      _entreprise.createEntreprise(entreprise: entreprise);
                       // final user = AppUser(
                       //     nom: nom,
                       //     prenoms: prenoms,
@@ -229,7 +294,7 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
 
                     }
                   },
-                  child: Text("Créer votre entreprise",
+                  child: Text("Enrégistré l'entreprise",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

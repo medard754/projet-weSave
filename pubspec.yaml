@@ -61,6 +61,10 @@ dependencies:
   intl: ^0.17.0
   intl_phone_field: ^3.1.0
   firebase_storage: ^10.2.18
+  auto_refresh_widget: ^0.1.1
+  auto_reload: ^1.1.0
+  path: ^1.8.1
+  file_picker: ^4.6.1
 
 dev_dependencies:
   flutter_test:

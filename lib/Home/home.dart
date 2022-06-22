@@ -30,44 +30,37 @@ class _HomePageState extends State<HomePage> {
   ];
   List<Produit> produit = [
     Produit(
-        nom: "Biscuit",
-        qte: 2,
+        reference: "Biscuit",
         pu: 500,
         codeCat: "nono",
         url_img: "assets/img/b1.jpeg"),
     Produit(
-        nom: "Chocolat",
-        qte: 2,
+        reference: "Chocolat",
         pu: 350,
         codeCat: "nono",
         url_img: "assets/img/b3.jpeg"),
     Produit(
-        nom: "Petit Poids",
-        qte: 2,
+        reference: "Petit Poids",
         pu: 1500,
         codeCat: "nono",
         url_img: "assets/img/b3.jpeg"),
     Produit(
-        nom: "Sardine",
-        qte: 2,
+        reference: "Sardine",
         pu: 500,
         codeCat: "nono",
         url_img: "assets/img/b4.jpeg"),
     Produit(
-        nom: "Petit poids",
-        qte: 2,
+        reference: "Petit poids",
         pu: 650,
         codeCat: "nono",
         url_img: "assets/img/b5.jpeg"),
     Produit(
-        nom: "Apolo",
-        qte: 2,
+        reference: "Apolo",
         pu: 700,
         codeCat: "nono",
         url_img: "assets/img/b6.jpeg"),
     Produit(
-        nom: "Biscuit",
-        qte: 2,
+        reference: "Biscuit",
         pu: 800,
         codeCat: "nono",
         url_img: "assets/img/b7.jpeg"),

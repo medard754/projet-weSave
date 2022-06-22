@@ -1,41 +1,51 @@
 import 'package:wesave/ressource/export.dart';
-class Entreprise {
-  final String nom;
-  final String siege;
-  final String adresse;
-  final String email;
-  final String password;
 
-  Entreprise({
-    required this.nom,
-    required this.siege,
-    required this.adresse,
-    required this.email,
-    required this.password
-  });
-  
-   Map<String, dynamic> toJson() => {
-       // 'uid': uid,
+class Entreprise {
+  final String? nom;
+  final String? adresse;
+  final String? telephone;
+  final String? email;
+  final String? siege;
+  final int? ifu;
+  final int? value;
+
+  Entreprise(
+      {this.nom,
+      this.adresse,
+      this.telephone,
+      this.email,
+      this.siege,
+      this.ifu,
+      this.value});
+
+  Map<String, dynamic> toJson() => {
+        // 'uid': uid,
         'nom': nom,
-        'siege':siege,
         'adresse': adresse,
+        'telephone': telephone,
         'email': email,
-        'password': password
+        'siege': siege,
+        'ifu': ifu,
+        'value': value
       };
 
   Future createEntreprise({required Entreprise entreprise}) async {
-    final docEntreprise = FirebaseFirestore.instance.collection('entreprise').doc();
+    final docEntreprise = FirebaseFirestore.instance.collection('users').doc();
+    final docEntre = FirebaseFirestore.instance.collection('commerce').doc();
     // user.uid = docUser.id;
     final json = entreprise.toJson();
     await docEntreprise.set(json);
+    await docEntre.set(json);
   }
 
   static Entreprise fromJson(Map<String, dynamic> json) => Entreprise(
         // uid: json['uid'],
-       nom: json['nom'],
-       siege: json['siege'],
-       adresse: json['adresse'],
-       email: json['email'],
-       password: json['password'],
-  );
+        nom: json['nom'],
+        adresse: json['adresse'],
+        telephone: json['telephone'],
+        email: json['email'],
+        siege: json['siege'],
+        ifu: json['ifu'],
+        value: json['value'],
+      );
 }
