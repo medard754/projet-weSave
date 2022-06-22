@@ -4,23 +4,26 @@ class AppUser {
   late final String? uid;
   final String? nom;
   final String? prenoms;
-  final int? telephone;
+  final String? telephone;
+  final String? adresse;
   final String? email;
   final String? password;
 
   AppUser(
-      { this.uid,
+      {this.uid,
       this.nom,
       this.prenoms,
+      this.adresse,
       this.telephone,
       this.email,
       this.password});
 
   Map<String, dynamic> toJson() => {
-       // 'uid': uid,
+        // 'uid': uid,
         'name': nom,
         'prenoms': prenoms,
         'telephone': telephone,
+        'adresse': adresse,
         'email': email,
         'password': password
       };
@@ -36,6 +39,7 @@ class AppUser {
       nom: json['nom'],
       prenoms: json['prenoms'],
       telephone: json['telephone'],
+      adresse: json['adresse'],
       email: json['email'],
       password: json['password']);
 }

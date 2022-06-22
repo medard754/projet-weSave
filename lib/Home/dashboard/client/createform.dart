@@ -1,16 +1,33 @@
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:wesave/ressource/export.dart';
 import 'package:wesave/Models/User.dart';
 
-class CreateEntreprise extends StatefulWidget {
-  CreateEntreprise({Key? key}) : super(key: key);
+class CreateClient extends StatefulWidget {
+  CreateClient({Key? key}) : super(key: key);
 
   @override
-  State<CreateEntreprise> createState() => _CreateEntrepriseState();
+  State<CreateClient> createState() => _CreateClientState();
 }
 
-class _CreateEntrepriseState extends State<CreateEntreprise> {
-//à modifier
+class _CreateClientState extends State<CreateClient> {
+  final user = FirebaseAuth.instance.currentUser;
+  List<String> docIDs = [];
+  Future getDocId() async {
+    await FirebaseFirestore.instance
+        .collection('client')
+        .get()
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference.id);
+              docIDs.add(document.reference.id);
+            }));
+  }
+
+ @override
+  void initState() {
+    getDocId();
+    super.initState();
+  }
 
   final AuthService _authService = AuthService();
   final FirebaseServices _firebaseServices = FirebaseServices();
@@ -24,12 +41,16 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
   bool isLoading = false;
   bool isValue = false;
   String mail = "";
+  String password = "";
+  String confirmpwd = "";
   String nom = "";
-  String siege = "";
-  String adresse = "";
-  String telephone = "";
-  int ifu = 0;
+  String prenoms = "";
+  String adresse="";
   
+  var telephone;
+  var Codetelephone;
+  var Nompays;
+  var pwd;
   @override
   Widget build(BuildContext context) {
     return loading
@@ -63,7 +84,7 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
             children: [
               SizedBox(height: MediaQuery.of(context).size.height / 8),
               Text(
-                "Créer une entreprise",
+                "Inscrivez-vous",
                 style: TextStyle(
                     color: Couleur.color,
                     fontWeight: FontWeight.bold,
@@ -74,10 +95,18 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
               const SizedBox(
                 height: 10,
               ),
+              /*  Container(
+                height: 150,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/img/loginin.png"),
+                        fit: BoxFit.contain)),
+              ),*/
               SizedBox(height: 25),
               CustomInput(
-                  title: "Nom ",
-                  placeholder: "Entrer le nom",
+                  title: "Username",
+                  placeholder: "Entrer votre nom",
                   obscure: false,
                   err: "entrer un nom valid",
                   validator: (e) {
@@ -95,29 +124,29 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
                   min: 1),
               const SizedBox(height: defaultPadding),
               CustomInput(
-                  title: "Siège",
-                  placeholder: "Entrer le siege",
+                  title: "Prénom",
+                  placeholder: "Entrer votre prénom",
                   obscure: false,
-                  err: "entrer un siege valid",
+                  err: "entrer un prénom valid",
                   validator: (e) {
                     if (e == null || e.isEmpty) {
-                      return "entrer un siege valid";
+                      return "entrer un prénom valid";
                     }
                   },
                   onSaved: (e) {
                     setState(() {
-                      siege = e;
+                      prenoms = e;
                     });
                   },
                   icon: Icons.person,
                   max: 2,
                   min: 1),
-              const SizedBox(height: defaultPadding),
+                  const SizedBox(height: defaultPadding),
               CustomInput(
                   title: "Adresse",
                   placeholder: "Entrer l'adresse",
                   obscure: false,
-                  err: "entrer une adresse valid",
+                  err: "entrer un adresse",
                   validator: (e) {
                     if (e == null || e.isEmpty) {
                       return "entrer un adresse valid";
@@ -125,10 +154,10 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
                   },
                   onSaved: (e) {
                     setState(() {
-                      adresse = e;
+                     adresse= e;
                     });
                   },
-                  icon: Icons.mail,
+                  icon: Icons.person,
                   max: 2,
                   min: 1),
               const SizedBox(height: defaultPadding),
@@ -147,6 +176,9 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
                   }
                 },
                 onChanged: (phone) {
+                  print(phone.completeNumber);
+                  Nompays = phone.countryCode;
+                  Codetelephone = phone.countryCode;
                   //telephone = phone.number;
                   setState(() {
                     telephone = phone.number;
@@ -157,7 +189,7 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
                 },
                 onSaved: (e) {
                   setState(() {
-                    //telephone = e?.number;
+                    telephone = e?.number;
                   });
                 },
               ),
@@ -180,25 +212,55 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
                   icon: Icons.mail,
                   max: 2,
                   min: 1),
+              const SizedBox(height: defaultPadding),
               CustomInput(
-                  title: "Ifu",
-                  placeholder: "Entrer votre ifu",
+                  title: "Mot de passe",
+                  placeholder: "Entrer un mot de passe",
                   obscure: false,
-                  err: "entrer un numero ifu valid",
+                  err: "entrer un mot de passe valid",
                   validator: (e) {
                     if (e == null || e.isEmpty) {
-                      return "entrer un numero ifu valid";
+                      return "entrer un mot de passe valid";
+                    } else {
+                      if (e.length < 8) {
+                        pwd = e;
+                        return "Entrer un mot de passe au moins 8 caractère";
+                      }
+                      return null;
                     }
                   },
                   onSaved: (e) {
                     setState(() {
-                      //ifu = e;
+                      password = e;
                     });
                   },
-                  icon: Icons.mail,
+                  icon: Icons.vpn_key_rounded,
                   max: 2,
                   min: 1),
               const SizedBox(height: defaultPadding),
+              CustomInput(
+                  title: "Confirmer votre mot de passe",
+                  placeholder: "Confirmer votre mot de passe",
+                  obscure: false,
+                  err: "entrer un mot de passe valid",
+                  validator: (e) {
+                    if (e == null || e.isEmpty) {
+                      return "entrer un nom valid";
+                    } else {
+                      if (e != password) {
+                        return "entrer le password entrer en haut";
+                      }
+                    }
+                  },
+                  onSaved: (e) {
+                    setState(() {
+                      confirmpwd = e;
+                    });
+                  },
+                  icon: Icons.vpn_key_rounded,
+                  max: 2,
+                  min: 1),
+              SizedBox(height: 20),
               FlatButton(
                   minWidth: double.infinity,
                   padding: const EdgeInsets.only(top: 12, bottom: 12),
@@ -215,27 +277,42 @@ class _CreateEntrepriseState extends State<CreateEntreprise> {
                       setState(() {
                         //loading = true;
                       });
-                      print(nom);
-                      print(siege);
-                      print(adresse);
-                      print(mail);
-                      print(telephone);
-                      // final user = AppUser(
-                      //     nom: nom,
-                      //     prenoms: prenoms,
-                      //     telephone: 90201107,
-                      //     email: mail,
-                      //     password: password);
-
+                      final user = AppUser(
+                          nom: nom,
+                          prenoms: prenoms,
+                          adresse: adresse,
+                          telephone: "90201107",
+                          email: mail,
+                          password: password);
+                      dynamic result = await _authService
+                          .signUpWitchEmailAndPassword(mail, password);
+                      _databaseService.createUser(user: user);
+                      // print(nom);
+                      // print(prenoms);
+                      // print(mail);
+                      // print(password);
+                      // print(confirmpwd);
+                      // print(Codetelephone);
+                      if (result == null) {
+                        setState(() {
+                          //error = "Please supply a valid email";
+                          loading = false;
+                        });
+                      } else {
+                        print("Register");
+                        print(result);
+                        print("connexion valid");
+                      }
                     }
                   },
-                  child: Text("Créer votre entreprise",
+                  child: Text("Enrégistré le client",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                           fontFamily: "Montserrat"))),
               const SizedBox(height: 10),
+              
             ],
           ),
         ));

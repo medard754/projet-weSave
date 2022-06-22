@@ -1,17 +1,17 @@
 import 'package:wesave/ressource/export.dart';
 class Categorie {
-  final String codeCat;
-  final String nom;
+  final String? libelle;
+  final String? description;
 
   Categorie({
-    required this.codeCat,
-    required this.nom,
+    this.libelle,
+    this.description,
   });
 
   Map<String, dynamic> toJson() => {
        // 'uid': uid,
-    'codeCat': codeCat,
-    'nom': nom,
+    'libelle': libelle,
+    'description': description,
   };
 
   Future createCategorie({required Categorie categorie}) async {
@@ -23,8 +23,8 @@ class Categorie {
 
   static Categorie fromJson(Map<String, dynamic> json) => Categorie(
         // uid: json['uid'],
-        codeCat: json['codeCat'],
-        nom: json['nom'],
+      libelle: json['libelle'],
+      description: json['description'],
       );
       
        

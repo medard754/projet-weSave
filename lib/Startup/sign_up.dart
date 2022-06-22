@@ -241,7 +241,7 @@ class _SignUpState extends State<SignUp> {
                       final user = AppUser(
                           nom: nom,
                           prenoms: prenoms,
-                          telephone: 90201107,
+                          telephone: "90201107",
                           email: mail,
                           password: password);
                       dynamic result = await _authService
