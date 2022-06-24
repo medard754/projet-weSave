@@ -36,7 +36,7 @@ class _DashboardState extends State<Dashboard> {
   List<String> docIDsCompte = [];
   List<String> docIDsCommande = [];
   List<String> docIDs = [];
-  List taille = [];
+  var taille = [];
   Future getDocId() async {
     await FirebaseFirestore.instance
         .collection('client')
@@ -45,7 +45,8 @@ class _DashboardState extends State<Dashboard> {
               print(document.reference.id);
               docIDs.add(document.reference.id);
             }));
-    a = docIDs;
+   
+    setState(() { });
   }
 
   Future getDocIdCommerce() async {
@@ -57,7 +58,7 @@ class _DashboardState extends State<Dashboard> {
               print(document.reference.id);
               docIDsCommerce.add(document.reference.id);
             }));
-    b = docIDsCommerce.length;
+   setState(() { });
   }
 
   Future getDocIdCategorie() async {
@@ -68,6 +69,7 @@ class _DashboardState extends State<Dashboard> {
               print(document.reference.id);
               docIDsCategorie.add(document.reference.id);
             }));
+    setState(() { });
   }
 
   Future getDocIdProduit() async {
@@ -78,7 +80,8 @@ class _DashboardState extends State<Dashboard> {
         .then((snapshot) => snapshot.docs.forEach((document) {
               print(document.reference.id);
               docIDsProduit.add(document.reference.id);
-            }));
+    }));
+    setState(() { });
   }
 
   Future getDocIdLivreur() async {
@@ -89,7 +92,8 @@ class _DashboardState extends State<Dashboard> {
         .then((snapshot) => snapshot.docs.forEach((document) {
               print(document.reference.id);
               docIDsLivreur.add(document.reference.id);
-            }));
+      }));
+      setState(() { });
   }
 
   Future getDocIdCompte() async {
@@ -100,7 +104,8 @@ class _DashboardState extends State<Dashboard> {
         .then((snapshot) => snapshot.docs.forEach((document) {
               print(document.reference.id);
               docIDsCompte.add(document.reference.id);
-            }));
+    }));
+    setState(() { });
   }
 
   Future getDocIdCommande() async {
@@ -111,7 +116,8 @@ class _DashboardState extends State<Dashboard> {
         .then((snapshot) => snapshot.docs.forEach((document) {
               print(document.reference.id);
               docIDsCompte.add(document.reference.id);
-            }));
+    }));
+    setState(() { });
   }
 
   var to;
@@ -124,22 +130,17 @@ class _DashboardState extends State<Dashboard> {
     getDocIdLivreur();
     getDocIdProduit();
     getDocIdCommande();
-    taille = [
-      docIDs.length,
-      docIDsCommerce.length,
-      docIDsCategorie.length,
-      docIDsProduit.length,
-      docIDsLivreur.length,
-      docIDsCommande.length,
-      docIDsCompte.length,
-    ];
+
     super.initState();
-    to = docIDs.length;
+    //sendTaille();
     // startAutoReload();
   }
 
   @override
   Widget build(BuildContext context) {
+    
+      setState(() {});
+
     return SafeArea(
         child: Scaffold(
             body: Center(
@@ -166,6 +167,15 @@ class _DashboardState extends State<Dashboard> {
     "Compte"
   ];
   Widget _contentPage() {
+    taille = [
+      docIDs.length,
+      docIDsCommerce.length,
+      docIDsCategorie.length,
+      docIDsProduit.length,
+      docIDsLivreur.length,
+      docIDsCommande.length,
+      docIDsCompte.length,
+    ];
     return Padding(
       padding: const EdgeInsets.all(defaultPadding),
       child: Column(
@@ -200,14 +210,15 @@ class _DashboardState extends State<Dashboard> {
                   mainAxisSpacing: 2,
                   childAspectRatio: 1.5,
                 ),
-                itemCount: data.length,
+                itemCount: taille.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(10),
                     child: GestureDetector(
                       onTap: () {
                         if (index == 0) {
-                          Get.to(CreateClient());
+                          //Get.to(CreateClient());
+                          Get.to(ReadClient());
                         } else if (index == 1) {
                           Get.to(CreateEntreprise());
                         } else if (index == 2) {
@@ -233,7 +244,7 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               ),
                               const SizedBox(height: defaultPadding),
-                              Text(docIDsCategorie.length.toString()),
+                              Text(taille[index].toString()),
                             ],
                           ),
                           decoration: BoxDecoration(

@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:wesave/Home/dashboard/client/allform.dart';
 import 'package:wesave/ressource/export.dart';
 import 'package:wesave/Models/User.dart';
 
@@ -289,23 +290,15 @@ class _CreateClientState extends State<CreateClient> {
                       dynamic result = await _authService
                           .signUpWitchEmailAndPassword(mail, password);
                       _databaseService.createUser(user: user);
-                      _databaseService.getUserDoc();
+                      Get.to(ReadClient());
+                      //_databaseService.getUserDoc();
                       // print(nom);
                       // print(prenoms);
                       // print(mail);
                       // print(password);
                       // print(confirmpwd);
                       // print(Codetelephone);
-                      if (result == null) {
-                        setState(() {
-                          //error = "Please supply a valid email";
-                          loading = false;
-                        });
-                      } else {
-                        print("Register");
-                        print(result);
-                        print("connexion valid");
-                      }
+
                     }
                   },
                   child: Text("Enrégistré le client",

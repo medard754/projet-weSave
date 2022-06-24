@@ -14,6 +14,11 @@ class DatabaseService {
   // Créer un client
   Future createUser({required AppUser user}) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc();
+    
+    
+    
+    
+
     // user.uid = docUser.id;
     final json = user.toJson();
     await docUser.set(json);
@@ -27,40 +32,34 @@ class DatabaseService {
       email: json['email'],
       password: json['password'],
       value: json['value']);
+
 //Lire un utilisateur
-  Future<AppUser> getUserDoc() async {
+  Future getUserDoc() async {
     AppUser us = AppUser();
+    //List<AppUser> users = [];
+    List users = [];
     final userRef = FirebaseFirestore.instance
         .collection("users")
         .withConverter<AppUser>(
           fromFirestore: (snapshot, _) => AppUser.fromJson(snapshot.data()!),
           toFirestore: (user, _) => user.toJson(),
         );
-    /* await userRef.where('uid', isEqualTo: uid).get().then((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        snapshot.docs.forEach((element) {
-          if (element.exists) {
-            us = element.data();
-          }
-        });
-      }
-    });*/
+    
     await userRef.get().then((snapshot) {
       if (snapshot.docs.isNotEmpty) {
         snapshot.docs.forEach((element) {
-          if (element.exists) {
-            us = element.data();
-          }
-          us = element.data();
-          print(us.email);
+          users.add(element.data());
+
+          // users = element.data();
+          print(us.nom);
         });
       }
     });
     // print('variable user $us');
-    return us;
+    return users;
   }
 
-//les Images creation
+//Enrégistré un produit
   Future<void> createPost(String imageName) async {
     final DocumentReference _noteRef =
         FirebaseFirestore.instance.collection("posts").doc();
@@ -77,8 +76,8 @@ class DatabaseService {
   }
 
 //Lire les utilisateurs
-  Stream<List<AppUser>> getUsertList() {
-    return _collectionReferenceProduit.snapshots().map((snapShot) => snapShot
+  Stream<List<dynamic>> getUserList() {
+    return FirebaseFirestore.instance.collection('users').snapshots().map((snapShot) => snapShot
         .docs
         .map((document) =>
             AppUser.fromJson(document.data as Map<String, dynamic>))

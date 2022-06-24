@@ -15,7 +15,7 @@ class _CreateProduitState extends State<CreateProduit> {
   final AuthService _authService = AuthService();
   final FirebaseServices _firebaseServices = FirebaseServices();
   final DatabaseService _databaseService = DatabaseService();
-
+  File? photosource;
   final Produit _produit = Produit();
   bool loading = false;
   String error = '';
@@ -33,32 +33,34 @@ class _CreateProduitState extends State<CreateProduit> {
   UploadTask? task;
   File? file;
   bool doesAnFileSlected = false;
-  
+
   @override
   Widget build(BuildContext context) {
-    
     return loading
         ? Loading()
         : Scaffold(
-            body: new Container(
-            // decoration: BoxDecoration(
-            //     image: DecorationImage(
-            //         image: AssetImage("assets/img/panier2.jpg"),
-            //         fit: BoxFit.cover)),
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(
-                  defaultPadding,
-                  defaultPadding,
-                  defaultPadding,
-                  MediaQuery.of(context).padding.bottom + defaultPadding),
-              children: [_formbody()],
-            ),
-          ));
+            body: Stack(
+                // decoration: BoxDecoration(
+                //     image: DecorationImage(
+                //         image: AssetImage("assets/img/panier2.jpg"),
+                //         fit: BoxFit.cover)),
+                children: [
+                _formbody(context),
+                //   ListView(
+                //   physics: BouncingScrollPhysics(),
+                //   padding: EdgeInsets.fromLTRB(
+                //       defaultPadding,
+                //       defaultPadding,
+                //       defaultPadding,
+                //       MediaQuery.of(context).padding.bottom + defaultPadding),
+                //   children: [],
+                // ),
+              ]));
   }
 
-  Widget _formbody() {
-    final imageName = (file != null) ? basename(file!.path) : "Aucun fichier sélectionner";
+  Widget _formbody(context) {
+    final imageName =
+        (file != null) ? basename(file!.path) : "Aucun fichier sélectionner";
     return Form(
         key: _formKey,
         child: Padding(
@@ -67,7 +69,16 @@ class _CreateProduitState extends State<CreateProduit> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             /* ButtonWidget(
+              Text(
+                "Enrégistré un produit",
+                style: TextStyle(
+                    color: Couleur.color,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    fontFamily: "Montserrat"),
+                textAlign: TextAlign.center,
+              ),
+              /* ButtonWidget(
                     icon: Icons.attach_file,
                     text: "Sélectionner une image",
                     onTap: selectImage),
@@ -80,21 +91,38 @@ class _CreateProduitState extends State<CreateProduit> {
                     onTap: uploadFile),
                 SizedBox(height: 10.0),
                 task != null ? buildUploadstatus(task!) : Container(),*/
-                SizedBox(height: 10.0),
-                doesAnFileSlected
-                    ? Text("Veuillez sélectionner un fichier",
-                        style: TextStyle(color: Colors.red, fontSize: 15))
-                    : Container(),
-              SizedBox(height: 10),
-              Text(
-                "Enrégistré un produit",
-                style: TextStyle(
-                    color: Couleur.color,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    fontFamily: "Montserrat"),
-                textAlign: TextAlign.center,
+              Container(
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundImage: file != null
+                          ? AssetImage(file!.path)
+                          : AssetImage("assets/img/panier2.jpg"),
+                    ),
+                    GestureDetector(
+                        onTap: selectImage,
+                        child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: Text("Sélectionner une image"),
+                            decoration: BoxDecoration(
+                                color: Colors.white10,
+                                border: Border.all(
+                                    color: Colors.black12,
+                                    style: BorderStyle.solid,
+                                    width: 2))))
+                  ],
+                ),
               ),
+              SizedBox(height: 10.0),
+              !doesAnFileSlected
+                  ? Text("Veuillez sélectionner un fichier",
+                      style: TextStyle(color: Colors.red, fontSize: 15))
+                  : Container(),
+              SizedBox(height: 10),
               const SizedBox(
                 height: 10,
               ),
@@ -155,59 +183,24 @@ class _CreateProduitState extends State<CreateProduit> {
                   icon: Icons.mail,
                   max: 2,
                   min: 1),
-              const SizedBox(height: defaultPadding),
-              CustomInput(
-                  title: "Image",
-                  placeholder: "Entrer l'image",
-                  obscure: false,
-                  err: "champ non valid",
-                  validator: (e) {
-                    if (e == null || e.isEmpty) {
-                      return "champ non valid";
-                    }
-                  },
-                  onSaved: (e) {
-                    setState(() {
-                      url_img = e;
-                    });
-                  },
-                  icon: Icons.mail,
-                  max: 2,
-                  min: 1),
-              const SizedBox(height: defaultPadding),
+              const SizedBox(height: defaultPadding + 4),
               FlatButton(
                   minWidth: double.infinity,
                   padding: const EdgeInsets.only(top: 12, bottom: 12),
                   color: Couleur.color,
                   onPressed: () async {
-                    /* _firebaseServices.UserDetails(
-                        nom: nom,
-                        prenoms: prenoms,
-                        telephone: 97558241,
-                        email: mail,
-                        password: password);*/
-
                     if (_formKey.currentState!.validate()) {
                       setState(() {
                         //loading = true;
                       });
-                      print(reference);
-                      print(pu);
-                      print(libelle);
-                      print(url_img);
+                      dynamic url_img = uploadFile();
+
                       final produit = Produit(
                           reference: reference,
                           pu: pu,
                           codeCat: libelle,
                           url_img: url_img);
                       _produit.createProduit(produit: produit);
-                      // final user = AppUser(
-                      //     nom: nom,
-                      //     prenoms: prenoms,
-                      //     telephone: 90201107,
-                      //     email: mail,
-                      //     password: password);
-
                     }
                   },
                   child: Text("Enrégistré le produit",
@@ -221,7 +214,9 @@ class _CreateProduitState extends State<CreateProduit> {
           ),
         ));
   }
+
   Future selectImage() async {
+    //final photosource= awiat
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
     if (result == null) return;
     final path = result.files.single.path!;
@@ -229,7 +224,8 @@ class _CreateProduitState extends State<CreateProduit> {
       file = File(path);
     });
   }
-  Future uploadFile() async {
+
+  Future<dynamic> uploadFile() async {
     if (file == null) {
       setState(() {
         doesAnFileSlected = true;
@@ -241,12 +237,12 @@ class _CreateProduitState extends State<CreateProduit> {
     task = FirebaseApi.upload(destination, file!);
     setState(() {});
     if (task == null) return;
-    ;
     final snapShot = await task!.whenComplete(() {});
-    final url = await snapShot.ref.getDownloadURL();
-    await _databaseService.createPost(imageName);
-    Get.back();
+    String url = await snapShot.ref.getDownloadURL();
+
+    return  url;
   }
+
   buildUploadstatus(UploadTask task) => StreamBuilder<TaskSnapshot>(
       stream: task.snapshotEvents,
       builder: (context, snapShot) {
