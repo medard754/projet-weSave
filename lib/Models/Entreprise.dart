@@ -1,6 +1,7 @@
 import 'package:wesave/ressource/export.dart';
 
 class Entreprise {
+  String? uid;
   final String? nom;
   final String? adresse;
   final String? telephone;
@@ -10,7 +11,8 @@ class Entreprise {
   final int? value;
 
   Entreprise(
-      {this.nom,
+      {this.uid,
+      this.nom,
       this.adresse,
       this.telephone,
       this.email,
@@ -19,7 +21,7 @@ class Entreprise {
       this.value});
 
   Map<String, dynamic> toJson() => {
-        // 'uid': uid,
+       'uid': uid,
         'nom': nom,
         'adresse': adresse,
         'telephone': telephone,
@@ -32,14 +34,14 @@ class Entreprise {
   Future createEntreprise({required Entreprise entreprise}) async {
     final docEntreprise = FirebaseFirestore.instance.collection('users').doc();
     final docEntre = FirebaseFirestore.instance.collection('commerce').doc();
-    // user.uid = docUser.id;
+     entreprise.uid = docEntreprise.id;
     final json = entreprise.toJson();
     await docEntreprise.set(json);
     await docEntre.set(json);
   }
 
   static Entreprise fromJson(Map<String, dynamic> json) => Entreprise(
-        // uid: json['uid'],
+         uid: json['uid'],
         nom: json['nom'],
         adresse: json['adresse'],
         telephone: json['telephone'],

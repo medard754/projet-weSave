@@ -7,8 +7,8 @@ import 'package:wesave/ressource/export.dart';
 import 'package:wesave/widgets/loader/PourHourGring.dart';
 
 class Dashboard extends StatefulWidget {
-  final String adminID;
-  Dashboard({required this.adminID});
+   String? adminID;
+  Dashboard({ this.adminID});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -140,7 +140,15 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     
       setState(() {});
-
+ /* return MultiProvider(
+    providers: [
+      StreamProvider(
+        create: (BuildContext context){}, initialData: const [],)
+    ],
+    child:Scaffold(
+      body: _contentPage(),
+    ),
+  );*/
     return SafeArea(
         child: Scaffold(
             body: Center(

@@ -12,7 +12,7 @@ class CreateClient extends StatefulWidget {
 
 class _CreateClientState extends State<CreateClient> {
   final user = FirebaseAuth.instance.currentUser;
-
+final AppUser _user = AppUser();
   List<String> docIDs = [];
   Future getDocId() async {
     await FirebaseFirestore.instance
@@ -273,28 +273,29 @@ class _CreateClientState extends State<CreateClient> {
                         telephone: 97558241,
                         email: mail,
                         password: password);*/
-
+                        var value = 2;
+                   
                     if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        //loading = true;
-                      });
-                      var value = 2;
-                      final user = AppUser(
+                       final user = AppUser(
                           nom: nom,
                           prenoms: prenoms,
                           adresse: adresse,
-                          telephone: "90201107",
+                          telephone: telephone,
                           email: mail,
                           password: password,
                           value: value);
+                      setState(() {
+                        loading = true;
+                      });
+                      
                       dynamic result = await _authService
                           .signUpWitchEmailAndPassword(mail, password);
-                      _databaseService.createUser(user: user);
-                      Get.to(ReadClient());
+                      
+                     Get.to(ReadClient());
                       //_databaseService.getUserDoc();
-                      // print(nom);
-                      // print(prenoms);
-                      // print(mail);
+                       print(nom);
+                      print(prenoms);
+                       print(mail);
                       // print(password);
                       // print(confirmpwd);
                       // print(Codetelephone);

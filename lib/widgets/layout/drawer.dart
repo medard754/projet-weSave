@@ -1,6 +1,8 @@
 import 'package:wesave/Home/dashboard/dashboard.dart';
 import 'package:wesave/ressource/export.dart';
 
+import '../../Home/dashboard/produit.dart/commande.dart';
+
 class CustomDrawer extends StatelessWidget {
 
   @override
@@ -53,7 +55,7 @@ class CustomDrawer extends StatelessWidget {
                                 selectedColor: Couleur.color,
                                 selectedTileColor: Couleur.color,
                                 onTap: () {
-                                  //Get.to(Magasin());
+                                  Get.to(Commander());
                                 }),
                             const SizedBox(height: defaultPadding),
                             ListTile(

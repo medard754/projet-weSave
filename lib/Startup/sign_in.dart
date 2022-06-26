@@ -28,24 +28,9 @@ class _SignInState extends State<SignIn> {
     return loading
         ? Loading()
         : Scaffold(
-            body: SingleChildScrollView(
-            child: new Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              // decoration: BoxDecoration(
-              //     image: DecorationImage(
-              //         image: AssetImage("assets/img/panier5.jpg"),
-              //         fit: BoxFit.cover)),
-              child: ListView(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.fromLTRB(
-                    defaultPadding,
-                    defaultPadding,
-                    defaultPadding,
-                    MediaQuery.of(context).padding.bottom + defaultPadding),
-                children: [_formbody()],
-              ),
-            ),
+          backgroundColor: Colors.white,
+            body: Stack(
+            children: [_formbody()],
           ));
   }
 
@@ -141,34 +126,21 @@ class _SignInState extends State<SignIn> {
                 ],
               ),
               SizedBox(height: 20),
+             
               FlatButton(
                   minWidth: double.infinity,
                   padding: const EdgeInsets.only(top: 12, bottom: 12),
                   color: Couleur.color,
                   onPressed: () async {
-                    
-                    if (_formKey.currentState!.validate()) {
+                     if (_formKey.currentState!.validate()) {
                       setState(() {
                         //loading = true;
                       });
-                      dynamic result = await _authService.signInWitchEmailAndPassword(
-                        email,password
-                      );
+                     
                       
-                      print("connexion etablie");
-                      print(result);
-                      print(email);
-                      print(password);
-                      if (result == null) {
-                        setState(() {
-                              error = "Please supply a valid email";
-                            loading = false;
-                            });
-                      } else {
-                        print("Register");
-                        print(result);
-                        print("connexion valid");
-                      }
+                      dynamic result = await _authService
+                          .signInWitchEmailAndPassword(email, password);
+                     
                     }
                   },
                   child: Text("Se connecter",
@@ -204,6 +176,7 @@ class _SignInState extends State<SignIn> {
                   ),
                   InkWell(
                     onTap: () {
+                      print("null");
                       Get.to(SignUp(
                         toggleView: widget.toggleView,
                       ));

@@ -13,21 +13,21 @@ class Loading extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             height:MediaQuery.of(context).size.height*0.2,
-            width:250,
+            width:MediaQuery.of(context).size.width,
             child:Row(
               mainAxisAlignment:MainAxisAlignment.spaceEvenly,
               children: [
-                SpinKitSquareCircle(
-                size:80,
-                color:Colors.green,
-              ),
+               SpinKitPouringHourGlass(
+        size: 55,
+        color:Colors.green,
+      ),
               const SizedBox(width:25,),
               Text(
-                "Patientez-vous un peu...",
+                "Patientez un peu...",
                 style: TextStyle(
                   color:Colors.black,
                   fontFamily:'Montserrat',
-                  fontSize:18,
+                  fontSize:16,
                   fontWeight:FontWeight.w700
                 ),
               )

@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:wesave/Home/wrapper.dart';
 import 'package:wesave/ressource/export.dart';
 import 'package:wesave/Models/User.dart';
 
@@ -14,6 +15,7 @@ class _SignUpState extends State<SignUp> {
   final AuthService _authService = AuthService();
   final FirebaseServices _firebaseServices = FirebaseServices();
   final DatabaseService _databaseService = DatabaseService();
+  final AppUser _user = AppUser();
   bool loading = false;
   String error = '';
   String errorpwd = '';
@@ -76,14 +78,6 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(
                 height: 10,
               ),
-              /*  Container(
-                height: 150,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/img/loginin.png"),
-                        fit: BoxFit.contain)),
-              ),*/
               SizedBox(height: 25),
               CustomInput(
                   title: "Username",
@@ -162,7 +156,7 @@ class _SignUpState extends State<SignUp> {
                   Codetelephone = phone.countryCode;
                   //telephone = phone.number;
                   setState(() {
-                    telephone = phone.number;
+                    telephone = phone.completeNumber;
                   });
                 },
                 onCountryChanged: (country) {
@@ -247,13 +241,6 @@ class _SignUpState extends State<SignUp> {
                   padding: const EdgeInsets.only(top: 12, bottom: 12),
                   color: Couleur.color,
                   onPressed: () async {
-                    /* _firebaseServices.UserDetails(
-                        nom: nom,
-                        prenoms: prenoms,
-                        telephone: 97558241,
-                        email: mail,
-                        password: password);*/
-
                     if (_formKey.currentState!.validate()) {
                       setState(() {
                         //loading = true;
@@ -263,35 +250,20 @@ class _SignUpState extends State<SignUp> {
                           nom: nom,
                           prenoms: prenoms,
                           adresse: adresse,
-                          telephone: "90201107",
+                          telephone: "66266187",
                           email: mail,
-                          password: password,
-                          value: value
+                          value:value
                       );
-                      
                       dynamic result = await _authService
                           .signUpWitchEmailAndPassword(mail, password);
-                      //fonction crear user
-                      _databaseService.createUser(user: user);
-                      // print(nom);
-                      // print(prenoms);
-                      // print(mail);
-                      // print(password);
-                      // print(confirmpwd);
-                      // print(Codetelephone);
-                      if (result == null) {
-                        setState(() {
-                          //error = "Please supply a valid email";
-                          loading = false;
-                        });
-                      } else {
-                        print("Register");
-                        print(result);
-                        print("connexion valid");
-                      }
+                      _databaseService.UserDetails(user: user);
+                  Get.to(Wrapper(
+                        idUser: user.uid,
+                        value: user.value,
+                      ));
                     }
                   },
-                  child: Text("s'inscrire",
+                  child: Text("s'inscrires",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

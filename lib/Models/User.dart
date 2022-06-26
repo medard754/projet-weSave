@@ -20,7 +20,7 @@ class AppUser {
       this.value});
 
   Map<String, dynamic> toJson() => {
-        // 'uid': uid,
+        'uid': uid,
         'name': nom,
         'prenoms': prenoms,
         'telephone': telephone,
@@ -31,15 +31,16 @@ class AppUser {
       };
 
   Future createUser({required AppUser user}) async {
-    final docUser = FirebaseFirestore.instance.collection("users").doc();
-    final docClient = FirebaseFirestore.instance.collection("client").doc();
+    final docUser = FirebaseFirestore.instance.collection('users').doc();
+    //final docClient = FirebaseFirestore.instance.collection("admin").doc();
+    user.uid = docUser.id;
     final json = user.toJson();
     await docUser.set(json);
-    await docClient.set(json);
+    //await docClient.set(json);
   }
 
   static AppUser fromJson(Map<String, dynamic> json) => AppUser(
-        // uid: json['uid'],
+         uid: json['uid'],
         nom: json['nom'],
         prenoms: json['prenoms'],
         telephone: json['telephone'],

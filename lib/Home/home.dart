@@ -1,3 +1,4 @@
+import 'package:rxdart/rxdart.dart';
 import 'package:wesave/Controller/searchlist.dart';
 import 'package:wesave/ressource/export.dart';
 import 'package:wesave/Models/Produit.dart';
@@ -65,8 +66,48 @@ class _HomePageState extends State<HomePage> {
         codeCat: "nono",
         url_img: "assets/img/b7.jpeg"),
   ];
+
+  List<dynamic> produits = [];
+  List<Produit> produi = [];
+  //List<String> user = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    setState(() {});
+    final produitRef = FirebaseFirestore.instance
+        .collection("produit")
+        .withConverter<Produit>(
+          fromFirestore: (snapshot, _) => Produit.fromJson(snapshot.data()!),
+          toFirestore: (produit, _) => produit.toJson(),
+        );
+    Stream<QuerySnapshot> comments = produitRef.snapshots();
+    var results = comments.map((qShot) async {
+      var futures = qShot.docs.map((doc) async {
+        return Produit(
+          red: (doc.data() as Produit).red,
+          url_img: (doc.data() as Produit).url_img,
+        );
+      });
+
+      return await Future.wait(futures);
+    });
+    dynamic result = produitRef.get().then((snapshot) {
+      setState(() {});
+      if (snapshot.docs.isNotEmpty) {
+        snapshot.docs.forEach((element) {
+          produits.add(element.data());
+
+          // users = element.data();
+        });
+      }
+    });
+
     return SafeArea(
         child: Scaffold(
       //backgroundColor: Colors.white,
@@ -86,9 +127,7 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.search, color: Couleur.color),
               iconSize: 22,
               onPressed: () {
-                showSearch(
-                    context: context,
-                    delegate: searchList());
+                showSearch(context: context, delegate: searchList());
               }),
           IconButton(
             onPressed: () {
@@ -111,117 +150,127 @@ class _HomePageState extends State<HomePage> {
                 )*/
         ],
       ),
-      body: _contentHomePage(),
-      /*floatingActionButton: FloatingActionButton(
-          backgroundColor: Couleur.color,
-          child: Icon(Icons.search),
-          onPressed: () {
-            //showSearch(context: context, delegate: searchList());
-          }),*/
-    ));
-  }
-
-  Widget _contentHomePage() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 5),
-      child: Column(
+      body: Scaffold(
+          body: Column(
         children: [
-          Container(
-            height: 50,
-            child: Expanded(
-                child: Container(
-              color: Color.fromARGB(232, 255, 255, 255),
-              height: 40,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categorie.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 50,
-                        width: 80,
-                        child: Text(categorie[index],
-                            style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w600)),
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(31, 228, 224, 224)),
-                      ),
-                    );
-                  }),
-            )),
-          ),
-          const SizedBox(height: defaultPadding - 8),
-          _Prototype()
-        ],
-      ),
-    );
-  }
-
-  Widget _Prototype() {
-    return Expanded(
-      child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 2,
-            childAspectRatio: 0.9,
-          ),
-          itemCount: produit.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  child: Column(
-                    children: [
-                      Container(
-                          height: 150,
-                          //height:MediaQuery.of(context).size.height*0.5,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                      produit[index].url_img.toString()),
-                                  fit: BoxFit.contain))),
-                      const SizedBox(height: defaultPadding),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Expanded(
+            child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 2,
+                  childAspectRatio: 0.6,
+                ),
+                itemCount: produits.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              width: 80,
-                              child: Text(produit[index].pu.toString() + "f",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600)),
-                            ),
+                                height: 165,
+                                child: Image.network(
+                                    produits[index].url_img.toString(),
+                                    //produitRef[index].
+                                    fit: BoxFit.contain),
+                                //height:MediaQuery.of(context).size.height*0.5,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                        color: Colors.black12, width: 1))),
                             const SizedBox(height: defaultPadding),
                             Container(
-                              alignment: Alignment.center,
-                              color: Colors.redAccent,
-                              height: 30,
-                              width: 50,
-                              child: Text("-38%",
-                                  style: TextStyle(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w800)),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    width: 80,
+                                    child: Text(
+                                        produits[index].pu.toString() + "f",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
+                                  const SizedBox(height: defaultPadding),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.redAccent,
+                                    height: 30,
+                                    width: 50,
+                                    child: Text(
+                                        produits[index].red.toString() + "%",
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w800)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Expire: " +
+                                        produits[index].date.toString(),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w200),
+                                    textAlign: TextAlign.end,
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      var img =
+                                          produits[index].url_img.toString();
+                                      var commerce =
+                                          produits[index].date.toString();
+                                      var reference =
+                                          produits[index].reference.toString();
+                                      var pu = produits[index].pu.toString();
+                                      var red = produits[index].red.toString();
+                                      var qte=produits[index].red.toString();
+                                      print("Acheter");
+                                      showDialogFuncUser(context, img, commerce,
+                                          reference, pu, red,qte);
+                                    },
+                                    child: Text(
+                                      "Consultez",
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 182, 38, 38),
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.white)),
-            );
-          }),
-    );
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white)),
+                  );
+                }),
+          )
+        ],
+      )),
+    ));
   }
 
-  /*showDialogFunc(
-    context, var img, var nom, var poids, var categorie, var prix) {
+  showDialogFunc(context, var img, var nom, var qte, var categorie, var prix) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -247,49 +296,89 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          icon: Icon(Icons.close_outlined, color: color),
+                          icon:
+                              Icon(Icons.close_outlined, color: Couleur.color),
                           iconSize: 20,
                         )
                       ],
                     ),
-                    Text(
-                      nom,
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
+                    const SizedBox(
+                      height: 12,
                     ),
                     Container(
-                        height: 220,
-                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height / 2,
                         child: Image.network(
                           img,
                           fit: BoxFit.contain,
                         )),
+                    Column(
+                      children: [
+                        Text(
+                          nom,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          qte,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          "Expire: 2022-06-30",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     SizedBox(
                       height: 10,
                     ),
-                    Center(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                         Get.to(ControlUser());
-                        },
-                        icon: Icon(
-                          Icons.shopping_cart,
-                          color: Colors.white,
-                          size: 15,
-                        ),
-                        label: Text(
-                          "Continuer pour validé l'achat",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.white),
-                        ),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        FlatButton(
+                            minWidth: 200,
+                            padding: const EdgeInsets.only(top: 12, bottom: 12),
+                            color: Colors.black12,
+                            onPressed: () async {
+                              Get.to(Get.to(ControlUser()));
+                            },
+                            child: Text("Ajouter au panier",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: "Montserrat"))),
+                        FlatButton(
+                            minWidth: 200,
+                            padding: const EdgeInsets.only(top: 12, bottom: 12),
+                            color: Colors.black12,
+                            onPressed: () async {
+                              //Get.to(Get.to(ControlUser()));
+                              //setState(() {});
+                            },
+                            child: Text("Commander",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: "Montserrat"))),
+                      ],
                     )
                   ],
                 ),
@@ -297,5 +386,123 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         });
-  }*/
+  }
+
+  showDialogFuncUser(
+      context, var img, var date, var refrence, var pu, var red,var qte) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Material(
+              type: MaterialType.transparency,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Container(
+                        //   height:30,
+                        //   child:Text(commerce,style:TextStyle(fontSize:20,fontWeight:FontWeight.w700 ), )
+                        // ),
+                        Container(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            child: Image.network(
+                              img,
+                              fit: BoxFit.contain,
+                            )),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(refrence,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Montserrat')),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Text(pu.toString()+"f",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Montserrat')),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Text(red.toString() + "%",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Montserrat')),
+                            Text("Expire le " + date,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Montserrat'),
+                                    
+                          ),
+                          
+                        const SizedBox(
+                              height: 8,
+                            ),
+                           Text(qte + " kg",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Montserrat'))
+                          ],
+                        ),
+
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FlatButton(
+                                minWidth: 150,
+                                padding:
+                                    const EdgeInsets.only(top: 12, bottom: 12),
+                                color: Colors.black,
+                                onPressed: () async {},
+                                child: Text("Ajouter au panier",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: "Montserrat"))),
+                            FlatButton(
+                                minWidth: 150,
+                                padding:
+                                    const EdgeInsets.only(top: 12, bottom: 12),
+                                color: Colors.black12,
+                                onPressed: () async {
+                                  Get.to(ControlUser());
+                                  setState(() {});
+                                },
+                                child: Text("Commander",
+                                    style: TextStyle(
+                                        color: Colors.redAccent,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: "Montserrat"))),
+                          ],
+                        )
+                      ],
+                    ),
+                    decoration: BoxDecoration(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
 }

@@ -96,12 +96,13 @@ class _CreateProduitState extends State<CreateProduit> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    CircleAvatar(
+                    /*CircleAvatar(
                       radius: 25,
+                      backgroundColor: Colors.transparent,
                       backgroundImage: file != null
                           ? AssetImage(file!.path)
                           : AssetImage("assets/img/panier2.jpg"),
-                    ),
+                    ),*/
                     GestureDetector(
                         onTap: selectImage,
                         child: Container(
@@ -118,10 +119,7 @@ class _CreateProduitState extends State<CreateProduit> {
                 ),
               ),
               SizedBox(height: 10.0),
-              !doesAnFileSlected
-                  ? Text("Veuillez sélectionner un fichier",
-                      style: TextStyle(color: Colors.red, fontSize: 15))
-                  : Container(),
+              
               SizedBox(height: 10),
               const SizedBox(
                 height: 10,
@@ -193,7 +191,7 @@ class _CreateProduitState extends State<CreateProduit> {
                       setState(() {
                         //loading = true;
                       });
-                      dynamic url_img = uploadFile();
+                      //dynamic url_img = uploadFile();
 
                       final produit = Produit(
                           reference: reference,
